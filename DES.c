@@ -2,6 +2,17 @@
 #include <stdlib.h>
 #include "DES.h"
 
+des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, int *permute_table)
+{
+	if(in_block_length != 64 || in_block_length != 56 || out_block_length != 56 || out_block_length != 48)
+		return DES_BLK_LEN_ERR;
+
+	for(int i = 0 ; i < table_size ; i++)
+		out_block[i] = in_block[permute_table[i]];
+
+	return DES_SUCCESS;
+}
+
 des_err key_generator(const int pk_size, int *key_with_parities, int *round_keys)
 {
 	if(pk_size != 64)
@@ -86,11 +97,17 @@ int main(void)
     /********************************/
 
     error_code = key_generator(TEXT_KEY_SIZE, key, round_keys);
-    if(error_code != DES_SUCCESS)
+    if(error_code == DES_BLK_LEN_ERR)
     {
     	printf("DES Error occurred while key generating: please check key size \n");
     	return 0;
     }
+    else if(error_code == DES_BLK_LEN_ERR)
+    {
+    	printf("DES Error occurred while key generating: please check table size \n");
+    	return 0;
+    }
+
 
 	return 0;
 }

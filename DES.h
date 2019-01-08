@@ -10,8 +10,9 @@ typedef unsigned int des_drr;
 typedef uint32_t des_err;
 #endif
 
-#define DES_SUCCESS		0x00
-#define DES_BLK_LEN_ERR 0x01
+#define DES_SUCCESS			0x00
+#define DES_BLK_LEN_ERR 	0x01
+#define DES_TABLE_LEN_ERR	0x02
 
 
 /*** In the below permutation tables, values of contents are 1 less than
@@ -122,7 +123,7 @@ const int S_BOX_8[4][16] =	{{13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 
 const int ShiftTable[16] = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
 
-des_err permute(const int in_block_length, const int out_block_length, int *in_block, int *out_block, int *permute_table);
+des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, int *permute_table);
 
 des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block);
 
