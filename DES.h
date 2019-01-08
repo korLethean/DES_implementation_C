@@ -30,6 +30,7 @@ const int InitialPermutationTable[64] =	{57, 49, 41, 33, 25, 17, 9, 1,
 										58, 50, 42, 34, 26, 18, 10, 2,
 										60, 52, 44, 36, 28, 20, 12, 4,
 										62, 54, 46, 38, 30, 22, 14, 6};
+const int InitialPermutationTableSize = 64;
 
 const int FinalPermutationTable[64] =	{39, 7, 47, 15, 55, 23, 63, 31,
 										38, 6, 46, 14, 54, 22, 62, 30,
@@ -39,6 +40,7 @@ const int FinalPermutationTable[64] =	{39, 7, 47, 15, 55, 23, 63, 31,
 										34, 2, 42, 10, 50, 18, 58, 26,
 										33, 1, 41, 9, 49, 17, 57, 25,
 										32, 0, 40, 8, 48, 16, 56, 24};
+const int FinalPermutationTableSize = 64;
 
 const int ExpansionPermutationTable[48] = 	{31, 0, 1, 2, 3, 4,
 											3, 4, 5, 6, 7, 8,
@@ -48,6 +50,7 @@ const int ExpansionPermutationTable[48] = 	{31, 0, 1, 2, 3, 4,
 											19, 20, 21, 22, 23, 24,
 											23, 24, 25, 26, 27, 28,
 											27, 28, 29, 30, 31, 0};
+const int ExpansionPermutationTableSize = 48;
 
 const int StraightPermutationTable[32] =	{15, 6, 19, 20,
 											28, 11, 27, 16,
@@ -57,6 +60,7 @@ const int StraightPermutationTable[32] =	{15, 6, 19, 20,
 											31, 26, 2, 8,
 											18, 12, 29, 5,
 											21, 10, 3, 24};
+const int StraightPermutationTableSize = 32;
 
 const int ParityDropTable[64] =	{56, 48, 40, 32, 24, 16, 8,
 								0, 57, 49, 41, 33, 25, 17,
@@ -66,6 +70,7 @@ const int ParityDropTable[64] =	{56, 48, 40, 32, 24, 16, 8,
 								6, 61, 53, 45, 37, 29, 21,
 								13, 5, 60, 52, 44, 36, 28,
 								20, 12, 4, 27, 19, 11, 3};
+const int ParityDropTableSize = 64;
 
 const int KeyCompressionTable[48] =	{13, 16, 10, 23, 0, 4,
 									2, 27, 14, 5, 20, 9,
@@ -75,6 +80,7 @@ const int KeyCompressionTable[48] =	{13, 16, 10, 23, 0, 4,
 									29, 39, 50, 44, 32, 47,
 									43, 48, 38, 55, 33, 52,
 									45, 41, 49, 35, 28, 31};
+const int KeyCompressionTableSize = 48;
 
 // In the below substitution tables, values of contents are exactly the same as the given values in FIPS 46-3.
 const int S_BOX_1[4][16] =	{{14, 4, 13, 1, 2, 15, 11, 8, 3, 10, 6, 12, 5, 9, 0, 7},	// Row 0
