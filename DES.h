@@ -129,7 +129,7 @@ const int S_BOX_8[4][16] =	{{13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 
 const int ShiftTable[16] = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
 
-des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, int *permute_table);
+des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table);
 
 des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block);
 
@@ -147,7 +147,7 @@ des_err swapper(int *left_block, int *right_block);
 
 des_err cipher(const int plain_block, int const *round_key[16], int *cipher_block);
 
-des_err key_generator(const int key_size, int *key_with_parities, int *round_keys);
+des_err key_generator(const int key_size, const int rk_size, int *key_with_parities, int *round_keys[16]);
 
 des_err shift_left(const int num_of_shifts, int *block);
 

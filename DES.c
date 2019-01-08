@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "DES.h"
 
-des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, int *permute_table)
+des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
 {
 	if(in_block_length != 64 || in_block_length != 56 || out_block_length != 56 || out_block_length != 48)
 		return DES_BLK_LEN_ERR;
@@ -13,28 +13,29 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	return DES_SUCCESS;
 }
 
-des_err key_generator(const int pk_size, int *key_with_parities, int *round_keys)
+des_err key_generator(const int pk_size, const int rk_size, int *key_with_parities, int *round_keys[16])
 {
-	if(pk_size != 64)
+	if(pk_size != 64 || rk_size != 48)
 		return DES_BLK_LEN_ERR;
 
 	const int prk_size = 56;
-	const int rk_size = 48;
 
 	int cipher_key[prk_size];
 	int left_key[prk_size / 2];
 	int right_key[prk_size / 2];
 	int pre_round_key[prk_size];
 
-	// permute
+	permute(pk_size, prk_size, ParityDropTableSize, key_with_parities, cipher_key, ParityDropTable);
 
 	// split
 
-	// for
+	for(int i = 0 ; i < 16 ; i++)
+	{
 		// shiftleft
 		// shiftleft
 		// combine
-		// permute
+		permute(prk_size, rk_size, KeyCompressionTableSize, pre_round_key, round_keys[i], KeyCompressionTable);
+	}
 
 	return DES_SUCCESS;
 }
@@ -78,7 +79,8 @@ int main(void)
 {
     printf("Encryption \n\n");
     const int TEXT_KEY_SIZE = 64;
-    int round_keys[16];
+    const int RK_SIZE = 48;
+    int round_keys[16][RK_SIZE];
     int plaintext[TEXT_KEY_SIZE];
     int key[TEXT_KEY_SIZE];
     des_err error_code = DES_SUCCESS;
@@ -96,7 +98,7 @@ int main(void)
 	printf("\n");*/
     /********************************/
 
-    error_code = key_generator(TEXT_KEY_SIZE, key, round_keys);
+    error_code = key_generator(TEXT_KEY_SIZE, RK_SIZE, key, round_keys);
     if(error_code == DES_BLK_LEN_ERR)
     {
     	printf("DES Error occurred while key generating: please check key size \n");
