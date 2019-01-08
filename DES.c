@@ -13,7 +13,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	return DES_SUCCESS;
 }
 
-des_err key_generator(const int pk_size, const int rk_size, int *key_with_parities, int *round_keys[16])
+des_err key_generator(const int pk_size, const int rk_size, int *key_with_parities, int (*round_keys)[48])
 {
 	if(pk_size != 64 || rk_size != 48)
 		return DES_BLK_LEN_ERR;

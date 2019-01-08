@@ -147,7 +147,7 @@ des_err swapper(int *left_block, int *right_block);
 
 des_err cipher(const int plain_block, int const *round_key[16], int *cipher_block);
 
-des_err key_generator(const int key_size, const int rk_size, int *key_with_parities, int *round_keys[16]);
+des_err key_generator(const int key_size, const int rk_size, int *key_with_parities, int (*round_keys)[48]);
 
 des_err shift_left(const int num_of_shifts, int *block);
 
