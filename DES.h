@@ -133,7 +133,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 
 des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block);
 
-des_err combine(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block, int *out_block);
+des_err combine(const int in_block_length, const int out_block_length, int *left_block, int *right_block, int *out_block);
 
 des_err copy(const int block_length, int *in_block, int *out_block);
 

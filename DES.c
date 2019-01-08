@@ -20,6 +20,20 @@ des_err shift_left(const int num_of_shifts, const int block_size, int *block)
 	return DES_SUCCESS;
 }
 
+des_err combine(const int in_block_length, const int out_block_length, int *left_block, int *right_block, int *out_block)
+{
+	if(in_block_length * 2 != out_block_length)
+		return DES_BLK_LEN_ERR;
+
+	for(int i = 0 ; i < in_block_length ; i++)
+	{
+		out_block[i] = left_block[i];
+		out_block[i + in_block_length] = right_block[i];
+	}
+
+	return DES_SUCCESS;
+}
+
 des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block)
 {
 	const int half_length = in_block_length / 2;
@@ -27,10 +41,10 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	if(out_block_length != half_length)
 		return DES_BLK_LEN_ERR;
 
-	for(int i = 0 ; i < half_length / 2 ; i++)
+	for(int i = 0 ; i < half_length ; i++)
 		left_block[i] = in_block[i];
 
-	for(int i = 0 ; i < half_length / 2 ; i++)
+	for(int i = 0 ; i < half_length ; i++)
 		right_block[i] = in_block[i + half_length];
 
 	return DES_SUCCESS;
@@ -75,6 +89,16 @@ des_err key_generator(const int pk_size, const int rk_size, int *key_with_pariti
 	if(error_code != DES_SUCCESS)
 		return error_code;
 
+	/*** for check left, right key ***/
+	printf("Left Key:\t");
+	for(int i = 0 ; i < prk_size / 2 ; i++)
+		printf("%d", left_key[i]);
+	printf("\nRight Key:\t");
+	for(int i = 0 ; i < prk_size / 2 ; i++)
+		printf("%d", right_key[i]);
+	printf("\n");
+	/*********************************/
+
 	for(int i = 0 ; i < 16 ; i++)
 	{
 		error_code = shift_left(ShiftTable[i], prk_size, left_key);
@@ -85,10 +109,16 @@ des_err key_generator(const int pk_size, const int rk_size, int *key_with_pariti
 		if(error_code != DES_SUCCESS)
 			return error_code;
 
-		// combine
-		/*error_code = permute(prk_size, rk_size, KeyCompressionTableSize, pre_round_key, round_keys[i], KeyCompressionTable);
+		error_code = combine(prk_size / 2, prk_size, left_key, right_key, pre_round_key);
 		if(error_code != DES_SUCCESS)
-			return error_code;*/
+			return error_code;
+
+		error_code = permute(prk_size, rk_size, KeyCompressionTableSize, pre_round_key, round_keys[i], KeyCompressionTable);
+		if(error_code != DES_SUCCESS)
+			return error_code;
+
+		for(int j = 0 ; j < prk_size ; j++)
+			pre_round_key[j] = 0;
 	}
 
 	return error_code;
@@ -153,7 +183,7 @@ int main(void)
     /********************************/
 
     error_code = key_generator(TEXT_KEY_SIZE, RK_SIZE, key, round_keys);
-    /*if(error_code == DES_BLK_LEN_ERR)
+    if(error_code == DES_BLK_LEN_ERR)
     {
     	printf("DES Error occurred while key generating: please check key size \n");
     	return 0;
@@ -162,7 +192,17 @@ int main(void)
     {
     	printf("DES Error occurred while key generating: please check table size \n");
     	return 0;
-    }*/
+    }
+
+    /*** for check round key ***/
+	/*for(int i = 0 ; i < 16 ; i++)
+	{
+		printf("Round key %d:\t", i + 1);
+		for(int j = 0 ; j < 48 ; j++)
+			printf("%d", round_keys[i][j]);
+		printf("\n");
+	}*/
+	/***************************/
 
 
 	return 0;
