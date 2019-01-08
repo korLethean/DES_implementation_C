@@ -148,9 +148,9 @@ int H2B(char value);
 
 char B2H(int value);
 
-void HexStringToBinaryArray(char *string, int *binary);
+void hex_string_to_binary_array(char *string, int *binary);
 
-void BinaryToHexStringArray(int *binary, char *string);
+void binary_to_hex_string_array(int *binary, char *string);
 
 
 #endif /* DES_H_ */
