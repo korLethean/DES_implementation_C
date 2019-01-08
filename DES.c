@@ -75,6 +75,7 @@ int main(void)
     hex_string_to_binary_array("123456ABCD132536", plaintext);
     hex_string_to_binary_array("AABB09182736CCDD", key);
 
+    /*** for check plaintext, key ***/
     /*printf("Plaintext: ");
     for(int i = 0 ; i < 64 ; i++)
     	printf("%d", plaintext[i]);
@@ -82,6 +83,7 @@ int main(void)
     for(int i = 0 ; i < 64 ; i++)
 		printf("%d", key[i]);
 	printf("\n");*/
+    /********************************/
 
     error_code = key_generator(TEXT_KEY_SIZE, key, round_keys);
     if(error_code != DES_SUCCESS)
