@@ -102,7 +102,7 @@ int main(void)
     	printf("DES Error occurred while key generating: please check key size \n");
     	return 0;
     }
-    else if(error_code == DES_BLK_LEN_ERR)
+    else if(error_code == DES_TABLE_LEN_ERR)
     {
     	printf("DES Error occurred while key generating: please check table size \n");
     	return 0;
