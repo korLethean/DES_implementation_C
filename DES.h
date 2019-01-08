@@ -122,4 +122,35 @@ const int S_BOX_8[4][16] =	{{13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 
 const int ShiftTable[16] = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
 
+des_err permute(const int in_block_length, const int out_block_length, int *in_block, int *out_block, int *permute_table);
+
+des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block);
+
+des_err combine(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block, int *out_block);
+
+des_err copy(const int block_length, int *in_block, int *out_block);
+
+des_err substitute(const int block_length, int *in_block1, int *in_block2, int *out_block);
+
+des_err function(const int round_key, int *in_block, int *out_block);
+
+des_err mixer(const int round_key, int *left_block, int *right_block);
+
+des_err swapper(int *left_block, int *right_block);
+
+des_err cipher(const int plain_block, int const *round_key[16], int *cipher_block);
+
+des_err key_generator(int *key_with_parities);
+
+des_err shift_left(const int num_of_shifts, int *block);
+
+int H2B(char value);
+
+char B2H(int value);
+
+void HexStringToBinaryArray(char *string, int *binary);
+
+void BinaryToHexStringArray(int *binary, char *string);
+
+
 #endif /* DES_H_ */
