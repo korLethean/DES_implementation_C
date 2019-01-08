@@ -2,6 +2,24 @@
 #include <stdlib.h>
 #include "DES.h"
 
+des_err shift_left(const int num_of_shifts, const int block_size, int *block)
+{
+	int half_size = block_size / 2;
+
+	if(half_size != 28)
+		return DES_BLK_LEN_ERR;
+
+	for(int i = 0 ; i < num_of_shifts ; i++)
+	{
+		int temp = block[0];
+		for(int j = 1 ; j < half_size ; j++)
+			block[j - 1] = block[j];
+		block[half_size - 1] = temp;
+	}
+
+	return DES_SUCCESS;
+}
+
 des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block)
 {
 	const int half_length = in_block_length / 2;
@@ -34,7 +52,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 
 des_err key_generator(const int pk_size, const int rk_size, int *key_with_parities, int (*round_keys)[48])
 {
-	des_err error_code;
+	des_err error_code = DES_SUCCESS;
 
 	if(pk_size != 64 || rk_size != 48)
 	{
@@ -59,12 +77,18 @@ des_err key_generator(const int pk_size, const int rk_size, int *key_with_pariti
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
-		// shiftleft
-		// shiftleft
-		// combine
-		error_code = permute(prk_size, rk_size, KeyCompressionTableSize, pre_round_key, round_keys[i], KeyCompressionTable);
+		error_code = shift_left(ShiftTable[i], prk_size, left_key);
 		if(error_code != DES_SUCCESS)
 			return error_code;
+
+		error_code = shift_left(ShiftTable[i], prk_size, right_key);
+		if(error_code != DES_SUCCESS)
+			return error_code;
+
+		// combine
+		/*error_code = permute(prk_size, rk_size, KeyCompressionTableSize, pre_round_key, round_keys[i], KeyCompressionTable);
+		if(error_code != DES_SUCCESS)
+			return error_code;*/
 	}
 
 	return error_code;
@@ -129,7 +153,7 @@ int main(void)
     /********************************/
 
     error_code = key_generator(TEXT_KEY_SIZE, RK_SIZE, key, round_keys);
-    if(error_code == DES_BLK_LEN_ERR)
+    /*if(error_code == DES_BLK_LEN_ERR)
     {
     	printf("DES Error occurred while key generating: please check key size \n");
     	return 0;
@@ -138,7 +162,7 @@ int main(void)
     {
     	printf("DES Error occurred while key generating: please check table size \n");
     	return 0;
-    }
+    }*/
 
 
 	return 0;

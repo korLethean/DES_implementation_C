@@ -149,7 +149,7 @@ des_err cipher(const int plain_block, int const *round_key[16], int *cipher_bloc
 
 des_err key_generator(const int key_size, const int rk_size, int *key_with_parities, int (*round_keys)[48]);
 
-des_err shift_left(const int num_of_shifts, int *block);
+des_err shift_left(const int num_of_shifts, const int block_size, int *block);
 
 int H2B(char value);
 
