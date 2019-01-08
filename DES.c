@@ -2,10 +2,29 @@
 #include <stdlib.h>
 #include "DES.h"
 
+des_err split(const int in_block_length, const int out_block_length, int *in_block, int *left_block, int *right_block)
+{
+	const int half_length = in_block_length / 2;
+
+	if(out_block_length != half_length)
+		return DES_BLK_LEN_ERR;
+
+	for(int i = 0 ; i < half_length / 2 ; i++)
+		left_block[i] = in_block[i];
+
+	for(int i = 0 ; i < half_length / 2 ; i++)
+		right_block[i] = in_block[i + half_length];
+
+	return DES_SUCCESS;
+}
+
 des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
 {
 	if(in_block_length != 64 || in_block_length != 56 || out_block_length != 56 || out_block_length != 48)
 		return DES_BLK_LEN_ERR;
+
+	if(table_size != 32 || table_size != 48 || table_size != 68)
+		return DES_TABLE_LEN_ERR;
 
 	for(int i = 0 ; i < table_size ; i++)
 		out_block[i] = in_block[permute_table[i]];
@@ -27,7 +46,7 @@ des_err key_generator(const int pk_size, const int rk_size, int *key_with_pariti
 
 	permute(pk_size, prk_size, ParityDropTableSize, key_with_parities, cipher_key, ParityDropTable);
 
-	// split
+	split(prk_size, prk_size / 2, cipher_key, left_key, right_key);
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
