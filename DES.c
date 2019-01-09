@@ -517,8 +517,8 @@ int main(void)
 	}
 
     binary_to_hex_string_array(plaintext, plaintext_c);
-	binary_to_hex_string_array(ciphertext, ciphertext_c);
-	binary_to_hex_string_array(restoredtext, restoredtext_c);
+    binary_to_hex_string_array(ciphertext, ciphertext_c);
+    binary_to_hex_string_array(restoredtext, restoredtext_c);
 
 	/*** for check result ***/
 	printf("Plain text:\t");
