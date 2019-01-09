@@ -125,8 +125,6 @@ const int S_BOX_8[4][16] =	{{13, 2, 8, 4, 6, 15, 11, 1, 10, 9, 3, 14, 5, 0, 12, 
 							{7, 11, 4, 1, 9, 12, 14, 2, 0, 6, 10, 13, 15, 3, 5, 8},		// Row 2
 							{2, 1, 14, 7, 4, 10, 8, 13, 15, 12, 9, 0, 3, 5, 6, 11}};	// Row 3
 
-int *const SubstituteTables[8] = {S_BOX_1, S_BOX_2, S_BOX_3, S_BOX_4, S_BOX_5, S_BOX_6, S_BOX_7, S_BOX_8};
-
 // The below ShiftTable is used to generate round keys
 const int ShiftTable[16] = {1, 1, 2, 2, 2, 2, 2, 2, 1, 2, 2, 2, 2, 2, 2, 1};
 
@@ -141,7 +139,7 @@ des_err copy(const int block_length, int *in_block, int *out_block);
 
 des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *out_block);
 
-des_err substitute(const int block_length, int *in_block_one, int *in_block_two, int *out_block);
+des_err substitute(const int block_length, int *in_block, int *out_block);
 
 des_err function(const int block_size, const int rk_size, int *round_key, int *in_block, int *out_block);
 

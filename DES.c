@@ -61,7 +61,7 @@ des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *o
 	return DES_SUCCESS;
 }
 
-des_err substitute(const int block_length, int *in_block_one, int *in_block_two, int *out_block)
+des_err substitute(const int block_length, int *in_block, int *out_block)
 {
 	if(block_length != 48)
 		return DES_BLK_LEN_ERR;
@@ -71,11 +71,44 @@ des_err substitute(const int block_length, int *in_block_one, int *in_block_two,
 	char row_c[2];
 	char column_c[4];
 
+	int value;
+	int const (*s_table)[16];
+
 	for(int i = 0 ; i < 8 ; i++)
 	{
-		sprintf(row_c, "%d%d", in_block_one[6 * i], in_block_two[6 * i + 5]);
-		row = atoi(row_c);
-		printf("%d \n", row);
+		sprintf(row_c, "%d%d", in_block[6 * i], in_block[6 * i + 5]);
+		row = strtol(row_c, NULL, 2);
+
+		sprintf(column_c, "%d%d%d%d", in_block[6 * i + 1], in_block[6 * i + 2], in_block[6 * i + 3], in_block[6 * i + 4]);
+		column = strtol(column_c, NULL, 2);
+
+		if(i == 0)
+			s_table = S_BOX_1;
+		else if(i == 1)
+			s_table = S_BOX_2;
+		else if(i == 2)
+			s_table = S_BOX_3;
+		else if(i == 3)
+			s_table = S_BOX_4;
+		else if(i == 4)
+			s_table = S_BOX_5;
+		else if(i == 5)
+			s_table = S_BOX_6;
+		else if(i == 6)
+			s_table = S_BOX_7;
+		else if(i == 7)
+			s_table = S_BOX_8;
+
+		value = s_table[row][column];
+
+		out_block[i * 4] = value & 8 ? 1 : 0;
+		out_block[i * 4 + 1] = value & 4 ? 1 : 0;
+		out_block[i * 4 + 2] = value & 2 ? 1 : 0;
+		out_block[i * 4 + 3] = value & 1 ? 1 : 0;
+
+		//*** for check row, column, value, block value ***//
+		//printf("row: %d\tcolumn: %d\ttable: %d\tvalue: %d \n", row, column, i + 1, value);
+		//printf("out_block: %d%d%d%d \n", out_block[i * 4], out_block[i * 4 + 1], out_block[i * 4 + 2], out_block[i * 4 + 3]);
 	}
 
 	return DES_SUCCESS;
@@ -101,7 +134,7 @@ des_err function(const int block_size, const int rk_size, int *round_key, int *i
 
 	int temp_extended[extended_size];
 	int temp_xor[extended_size];
-	int temp_substitute;	// TODO: array size needed
+	int temp_substitute[block_size];
 
 	error_code = permute(block_size, extended_size, ExpansionPermutationTableSize, in_block, temp_extended, ExpansionPermutationTable);
 	if(error_code != DES_SUCCESS)
@@ -111,7 +144,10 @@ des_err function(const int block_size, const int rk_size, int *round_key, int *i
 	if(error_code != DES_SUCCESS)
 		return error_code;
 
-	// TODO: subsitute
+	error_code = substitute(extended_size, temp_xor, temp_substitute);
+	if(error_code != DES_SUCCESS)
+			return error_code;
+
 
 	// TODO: permute(block_size, block_size, StraightPermutationTableSize, temp_substitute, out_block, StraightPermutationTable);
 
