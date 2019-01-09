@@ -50,6 +50,20 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	return DES_SUCCESS;
 }
 
+des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
+{
+	if(!(in_block_length == 64 || in_block_length == 56 || out_block_length == 56 || out_block_length == 48))
+		return DES_BLK_LEN_ERR;
+
+	if(!(table_size == 32 || table_size == 48 || table_size == 64))
+		return DES_TABLE_LEN_ERR;
+
+	for(int i = 0 ; i < table_size ; i++)
+		out_block[i] = in_block[permute_table[i]];
+
+	return DES_SUCCESS;
+}
+
 des_err cipher(const int plain_size, const int rk_num, const int rk_size, const int plain_block, int const *round_key[16], int *cipher_block)
 {
 	des_err error_code = DES_SUCCESS;
@@ -72,27 +86,30 @@ des_err cipher(const int plain_size, const int rk_num, const int rk_size, const 
 		return error_code;
 	}
 
-	int
+	int in_block[plain_size];
+	int out_block[plain_size];
+	int left_block[plain_size / 2];
+	int right_block[plain_size / 2];
 
-	permute(plain_size, plain_size, InitialPermutationTableSize, plain_block, NULL, InitialPermutationTable);
+	permute(plain_size, plain_size, InitialPermutationTableSize, in_block, out_block, InitialPermutationTable);
 
+	split(plain_size, plain_size / 2, in_block, left_block, right_block);
+
+	for(int i = 0 ; i < 16 ; i++)
+	{
+		// mixer
+		if(i != 15)
+		{
+			// swapper
+		}
+	}
+
+	// combine left right -> out
+
+	// permute out -> cipher with finalpermute
 
 
 	return error_code;
-}
-
-des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
-{
-	if(!(in_block_length == 64 || in_block_length == 56 || out_block_length == 56 || out_block_length == 48))
-		return DES_BLK_LEN_ERR;
-
-	if(!(table_size == 32 || table_size == 48 || table_size == 64))
-		return DES_TABLE_LEN_ERR;
-
-	for(int i = 0 ; i < table_size ; i++)
-		out_block[i] = in_block[permute_table[i]];
-
-	return DES_SUCCESS;
 }
 
 des_err key_generator(const int pk_size, const int rk_size, int *key_with_parities, int (*round_keys)[48])
@@ -217,12 +234,12 @@ int main(void)
     error_code = key_generator(TEXT_KEY_SIZE, RK_SIZE, key, round_keys);
     if(error_code == DES_BLK_LEN_ERR)
     {
-    	printf("DES Error occurred while key generating: please check key size \n");
+    	printf("DES Encryption Error occurred while key generating: please check key size \n");
     	return 0;
     }
     else if(error_code == DES_TABLE_LEN_ERR)
     {
-    	printf("DES Error occurred while key generating: please check table size \n");
+    	printf("DES Encryption Error occurred while key generating: please check table size \n");
     	return 0;
     }
 
@@ -237,7 +254,26 @@ int main(void)
 	/***************************/
 
     // cipher
-
+    if(error_code == DES_BLK_LEN_ERR)
+	{
+		printf("DES Encryption Error occurred while cipher: please check key size \n");
+		return 0;
+	}
+	else if(error_code == DES_TABLE_LEN_ERR)
+	{
+		printf("DES Encryption Error occurred while cipher: please check table size \n");
+		return 0;
+	}
+	else if(error_code == DES_RK_QUANTITY_ERR)
+	{
+		printf("DES Encryption Error occurred while cipher: please check number of round keys \n");
+		return 0;
+	}
+	else if(error_code == DES_RK_LEN_ERR)
+	{
+		printf("DES Encryption Error occurred while cipher: please check round keys size \n");
+		return 0;
+	}
     // decryption
 
 
