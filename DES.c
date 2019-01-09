@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "DES.h"
 
 des_err shift_left(const int num_of_shifts, const int block_size, int *block)
@@ -227,6 +228,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	if(!(table_size == 32 || table_size == 48 || table_size == 64))
 		return DES_TABLE_LEN_ERR;
 
+	//*** thanks to @d57_kr about helping find error ***//
 	for(int i = 0 ; i < out_block_length ; i++)
 		out_block[i] = in_block[permute_table[i]];
 
@@ -372,8 +374,9 @@ int H2B(char value)
 void hex_string_to_binary_array(char *string, int *binary)
 {
 	int value = 0;
+	int len = strlen(string);
 
-	for(int i = 0 ; i < strlen(string) ; i++)
+	for(int i = 0 ; i < len ; i++)
 	{
 		value = H2B(string[i]);
 		binary[i * 4] = value / 8;
@@ -409,6 +412,8 @@ int main(void)
     int plaintext_c[TEXT_KEY_SIZE / 4];
     int ciphertext[TEXT_KEY_SIZE];
     int ciphertext_c[TEXT_KEY_SIZE / 4];
+    int restoredtext[TEXT_KEY_SIZE];
+    int restoredtext_c[TEXT_KEY_SIZE / 4];
     int key[TEXT_KEY_SIZE];
     des_err error_code = DES_SUCCESS;
 
@@ -417,10 +422,10 @@ int main(void)
 
     /*** for check plaintext, key ***/
     /*printf("Plaintext: ");
-    for(int i = 0 ; i < 64 ; i++)
+    for(int i = 0 ; i < TEXT_KEY_SIZE ; i++)
     	printf("%d", plaintext[i]);
     printf("\nKey: ");
-    for(int i = 0 ; i < 64 ; i++)
+    for(int i = 0 ; i < TEXT_KEY_SIZE ; i++)
 		printf("%d", key[i]);
 	printf("\n");*/
     /********************************/
@@ -440,10 +445,10 @@ int main(void)
     }
 
     /*** for check round key ***/
-	/*for(int i = 0 ; i < 16 ; i++)
+	/*for(int i = 0 ; i < RK_NUM ; i++)
 	{
 		printf("Round key %d:\t", i + 1);
-		for(int j = 0 ; j < 48 ; j++)
+		for(int j = 0 ; j < RK_SIZE ; j++)
 			printf("%d", round_keys[i][j]);
 		printf("\n");
 	}*/
@@ -473,12 +478,49 @@ int main(void)
 
     printf("Decryption \n\n");
 
+    for(int i = 0 ; i < RK_NUM ; i++)
+    {
+    	for(int j = 0 ; j < RK_SIZE ; j++)
+    		reversed_round_keys[i][j] = round_keys[RK_NUM - 1 - i][j];
+    }
 
+    /*** for check reversed round key ***/
+	/*for(int i = 0 ; i < RK_NUM ; i++)
+	{
+		printf("Round key %d:\t", i + 1);
+		for(int j = 0 ; j < RK_SIZE ; j++)
+			printf("%d", reversed_round_keys[i][j]);
+		printf("\n");
+	}*/
+	/***************************/
+
+    error_code = cipher(TEXT_KEY_SIZE, RK_NUM, RK_SIZE, ciphertext, reversed_round_keys, restoredtext);
+    if(error_code == DES_BLK_LEN_ERR)
+	{
+		printf("DES Decryption Error occurred while cipher: please check key size \n");
+		return 0;
+	}
+	else if(error_code == DES_TABLE_LEN_ERR)
+	{
+		printf("DES Decryption Error occurred while cipher: please check table size \n");
+		return 0;
+	}
+	else if(error_code == DES_RK_QUANTITY_ERR)
+	{
+		printf("DES Decryption Error occurred while cipher: please check number of round keys \n");
+		return 0;
+	}
+	else if(error_code == DES_RK_LEN_ERR)
+	{
+		printf("DES Decryption Error occurred while cipher: please check round keys size \n");
+		return 0;
+	}
 
     binary_to_hex_string_array(plaintext, plaintext_c);
 	binary_to_hex_string_array(ciphertext, ciphertext_c);
+	binary_to_hex_string_array(restoredtext, restoredtext_c);
 
-    /*** for check cipher text ***/
+	/*** for check result ***/
 	printf("Plain text:\t");
     for(int i = 0 ; i < 16 ; i++)
 		printf("%X", plaintext_c[i]);
@@ -487,6 +529,11 @@ int main(void)
     printf("Cipher text:\t");
     for(int i = 0 ; i < 16 ; i++)
 		printf("%X", ciphertext_c[i]);
+	printf("\n");
+
+    printf("Restored text:\t");
+    for(int i = 0 ; i < 16 ; i++)
+		printf("%X", restoredtext_c[i]);
 	printf("\n");
 	/*****************************/
 
