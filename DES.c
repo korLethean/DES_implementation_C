@@ -50,6 +50,23 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	return DES_SUCCESS;
 }
 
+des_err swapper(const int block_size, int *left_block, int *right_block)
+{
+	if(block_size != 32)
+		return DES_BLK_LEN_ERR;
+
+	int temp[block_size];
+
+	for(int i = 0 ; i < block_size ; i++)
+	{
+		temp[i] = right_block[i];
+		right_block[i] = left_block[i];
+		left_block[i] = temp[i];
+	}
+
+	return DES_SUCCESS;
+}
+
 des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *out_block)
 {
 	if(!(block_length == 48 || block_length == 32))
@@ -257,14 +274,17 @@ des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *p
 
 		if(i != 15)
 		{
-			// TODO: swapper
+			error_code = swapper(plain_size / 2, left_block, right_block);
+			if(error_code != DES_SUCCESS)
+				return error_code;
 		}
 	}
 
-	// TODO: combine left right -> out
+	error_code = combine(plain_size / 2, plain_size, left_block, right_block, out_block);
+	if(error_code != DES_SUCCESS)
+		return error_code;
 
-	// TODO: permute out -> cipher with finalpermute
-
+	error_code = permute(plain_size, plain_size, FinalPermutationTableSize, out_block, cipher_block, FinalPermutationTable);
 
 	return error_code;
 }
@@ -433,6 +453,15 @@ int main(void)
 		printf("DES Encryption Error occurred while cipher: please check round keys size \n");
 		return 0;
 	}
+
+
+
+    /*** for check cipher text ***/
+	/*printf("Cipher text:\t");
+    for(int i = 0 ; i < 64 ; i++)
+		printf("%c", ciphertext[i]);
+	printf("\n");*/
+	/*****************************/
 
     // TODO: decryption
 

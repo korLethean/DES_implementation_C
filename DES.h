@@ -135,8 +135,6 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 
 des_err combine(const int in_block_length, const int out_block_length, int *left_block, int *right_block, int *out_block);
 
-des_err copy(const int block_length, int *in_block, int *out_block);
-
 des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *out_block);
 
 des_err substitute(const int block_length, int *in_block, int *out_block);
@@ -145,7 +143,7 @@ des_err function(const int block_size, const int rk_size, int *round_key, int *i
 
 des_err mixer(const int block_size, const int rk_size, int *round_key, int *left_block, int *right_block);
 
-des_err swapper(int *left_block, int *right_block);
+des_err swapper(const int block_size, int *left_block, int *right_block);
 
 des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *plain_block, int (*round_keys)[48], int *cipher_block);
 
