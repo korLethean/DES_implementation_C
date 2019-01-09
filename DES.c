@@ -85,8 +85,10 @@ des_err substitute(const int block_length, int *in_block, int *out_block)
 
 	int row;
 	int column;
-	char row_c[2];
-	char column_c[4];
+	char row_c[3];
+	row_c[3] = '\0';
+	char column_c[5];
+	column_c[5] = '\0';
 
 	int value;
 	int const (*s_table)[16];
@@ -391,10 +393,7 @@ void binary_to_hex_string_array(int *binary, int *string)
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
-		sprintf(&temp[0], "%d", binary[i * 4]);
-		sprintf(&temp[1], "%d", binary[i * 4 + 1]);
-		sprintf(&temp[2], "%d", binary[i * 4 + 2]);
-		sprintf(&temp[3], "%d", binary[i * 4 + 3]);
+		sprintf(temp, "%d%d%d%d", binary[i * 4], binary[i * 4 + 1], binary[i * 4 + 2], binary[i * 4 + 3]);
 		string[i] = strtol(temp, NULL, 2);
 	}
 }
