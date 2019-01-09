@@ -64,7 +64,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	return DES_SUCCESS;
 }
 
-des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *plain_block, int const *round_key[16], int *cipher_block)
+des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *plain_block, int const (*round_keys)[48], int *cipher_block)
 {
 	des_err error_code = DES_SUCCESS;
 
@@ -91,9 +91,13 @@ des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *p
 	int left_block[plain_size / 2];
 	int right_block[plain_size / 2];
 
-	permute(plain_size, plain_size, InitialPermutationTableSize, plain_block, in_block, InitialPermutationTable);
+	error_code = permute(plain_size, plain_size, InitialPermutationTableSize, plain_block, in_block, InitialPermutationTable);
+	if(error_code != DES_SUCCESS)
+		return error_code;
 
-	split(plain_size, plain_size / 2, in_block, left_block, right_block);
+	error_code = split(plain_size, plain_size / 2, in_block, left_block, right_block);
+	if(error_code != DES_SUCCESS)
+		return error_code;
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
@@ -253,7 +257,7 @@ int main(void)
 	}*/
 	/***************************/
 
-    // cipher
+    error_code = cipher(TEXT_KEY_SIZE, 16, RK_SIZE, plaintext, round_keys, ciphertext);
     if(error_code == DES_BLK_LEN_ERR)
 	{
 		printf("DES Encryption Error occurred while cipher: please check key size \n");
