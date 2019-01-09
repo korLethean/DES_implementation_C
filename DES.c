@@ -146,10 +146,11 @@ des_err function(const int block_size, const int rk_size, int *round_key, int *i
 
 	error_code = substitute(extended_size, temp_xor, temp_substitute);
 	if(error_code != DES_SUCCESS)
-			return error_code;
+		return error_code;
 
-
-	// TODO: permute(block_size, block_size, StraightPermutationTableSize, temp_substitute, out_block, StraightPermutationTable);
+	error_code = permute(block_size, block_size, StraightPermutationTableSize, temp_substitute, out_block, StraightPermutationTable);
+	if(error_code != DES_SUCCESS)
+		return error_code;
 
 	return error_code;
 }
@@ -165,15 +166,18 @@ des_err mixer(const int block_size, const int rk_size, int *round_key, int *left
 		return DES_RK_LEN_ERR;
 
 	int temp_function[block_size];
-	int temp_xor;		// TODO: array size needed
+	int temp_xor[block_size];
 
 	error_code = function(block_size, rk_size, round_key, right_block, temp_function);
 	if(error_code != DES_SUCCESS)
 		return error_code;
 
-	// TODO: xor
+	error_code = xor(block_size, left_block, temp_function, temp_xor);
+	if(error_code != DES_SUCCESS)
+		return error_code;
 
-	// TODO: copy
+	for(int i = 0 ; i < block_size ; i++)
+		left_block[i] = temp_xor[i];
 
 	return error_code;
 }
@@ -195,6 +199,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 		case 64:
 		case 56:
 		case 48:
+		case 32:
 			break;
 		default :
 			return DES_BLK_LEN_ERR;
