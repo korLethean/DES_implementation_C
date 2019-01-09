@@ -227,7 +227,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	if(!(table_size == 32 || table_size == 48 || table_size == 64))
 		return DES_TABLE_LEN_ERR;
 
-	for(int i = 0 ; i < table_size ; i++)
+	for(int i = 0 ; i < out_block_length ; i++)
 		out_block[i] = in_block[permute_table[i]];
 
 	return DES_SUCCESS;
@@ -317,13 +317,13 @@ des_err key_generator(const int pk_size, const int rk_size, int *key_with_pariti
 		return error_code;
 
 	/*** for check left, right key ***/
-	printf("Left Key:\t");
+	/*printf("Left Key:\t");
 	for(int i = 0 ; i < prk_size / 2 ; i++)
 		printf("%d", left_key[i]);
 	printf("\nRight Key:\t");
 	for(int i = 0 ; i < prk_size / 2 ; i++)
 		printf("%d", right_key[i]);
-	printf("\n");
+	printf("\n");*/
 	/*********************************/
 
 	for(int i = 0 ; i < 16 ; i++)
@@ -404,6 +404,7 @@ int main(void)
     const int RK_NUM = 16;
     const int RK_SIZE = 48;
     int round_keys[RK_NUM][RK_SIZE];
+    int reversed_round_keys[RK_NUM][RK_SIZE];
     int plaintext[TEXT_KEY_SIZE];
     int plaintext_c[TEXT_KEY_SIZE / 4];
     int ciphertext[TEXT_KEY_SIZE];
@@ -470,16 +471,24 @@ int main(void)
 		return 0;
 	}
 
-    binary_to_hex_string_array(ciphertext, ciphertext_c);
+    printf("Decryption \n\n");
+
+
+
+    binary_to_hex_string_array(plaintext, plaintext_c);
+	binary_to_hex_string_array(ciphertext, ciphertext_c);
 
     /*** for check cipher text ***/
-	printf("Cipher text:\t");
+	printf("Plain text:\t");
+    for(int i = 0 ; i < 16 ; i++)
+		printf("%X", plaintext_c[i]);
+	printf("\n");
+
+    printf("Cipher text:\t");
     for(int i = 0 ; i < 16 ; i++)
 		printf("%X", ciphertext_c[i]);
 	printf("\n");
 	/*****************************/
-
-    // TODO: decryption
 
 	return 0;
 }
