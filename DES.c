@@ -50,6 +50,26 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	return DES_SUCCESS;
 }
 
+des_err mixer(const int block_size, const int rk_size, const int *round_key, int *left_block, int *right_block)
+{
+	if(block_size != 32)
+		return DES_BLK_LEN_ERR;
+
+	if(rk_size != 48)
+		return DES_RK_LEN_ERR;
+
+	int temp_function;	// array size needed
+	int temp_xor;		// array size needed
+
+	// function
+
+	// xor
+
+	// copy
+
+	return DES_SUCCESS;
+}
+
 des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
 {
 	if(!(in_block_length == 64 || in_block_length == 56 || out_block_length == 56 || out_block_length == 48))
@@ -215,8 +235,9 @@ int main(void)
 {
     printf("Encryption \n\n");
     const int TEXT_KEY_SIZE = 64;
+    const int RK_NUM = 16;
     const int RK_SIZE = 48;
-    int round_keys[16][RK_SIZE];
+    int round_keys[RK_NUM][RK_SIZE];
     int plaintext[TEXT_KEY_SIZE];
     int ciphertext[TEXT_KEY_SIZE];
     int key[TEXT_KEY_SIZE];
@@ -257,7 +278,7 @@ int main(void)
 	}*/
 	/***************************/
 
-    error_code = cipher(TEXT_KEY_SIZE, 16, RK_SIZE, plaintext, round_keys, ciphertext);
+    error_code = cipher(TEXT_KEY_SIZE, RK_NUM, RK_SIZE, plaintext, round_keys, ciphertext);
     if(error_code == DES_BLK_LEN_ERR)
 	{
 		printf("DES Encryption Error occurred while cipher: please check key size \n");

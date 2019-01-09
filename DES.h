@@ -143,7 +143,7 @@ des_err substitute(const int block_length, int *in_block1, int *in_block2, int *
 
 des_err function(const int round_key, int *in_block, int *out_block);
 
-des_err mixer(const int round_key, int *left_block, int *right_block);
+des_err mixer(const int block_size, const int rk_size, const int *round_key, int *left_block, int *right_block);
 
 des_err swapper(int *left_block, int *right_block);
 
