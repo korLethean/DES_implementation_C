@@ -61,6 +61,26 @@ des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *o
 	return DES_SUCCESS;
 }
 
+des_err substitute(const int block_length, int *in_block_one, int *in_block_two, int *out_block)
+{
+	if(block_length != 48)
+		return DES_BLK_LEN_ERR;
+
+	int row;
+	int column;
+	char row_c[2];
+	char column_c[4];
+
+	for(int i = 0 ; i < 8 ; i++)
+	{
+		sprintf(row_c, "%d%d", in_block_one[6 * i], in_block_two[6 * i + 5]);
+		row = atoi(row_c);
+		printf("%d \n", row);
+	}
+
+	return DES_SUCCESS;
+}
+
 des_err function(const int block_size, const int rk_size, int *round_key, int *in_block, int *out_block)
 {
 	des_err error_code = DES_SUCCESS;
@@ -91,7 +111,6 @@ des_err function(const int block_size, const int rk_size, int *round_key, int *i
 	if(error_code != DES_SUCCESS)
 		return error_code;
 
-
 	// TODO: subsitute
 
 	// TODO: permute(block_size, block_size, StraightPermutationTableSize, temp_substitute, out_block, StraightPermutationTable);
@@ -99,7 +118,7 @@ des_err function(const int block_size, const int rk_size, int *round_key, int *i
 	return error_code;
 }
 
-des_err mixer(const int block_size, const int rk_size, const int *round_key, int *left_block, int *right_block)
+des_err mixer(const int block_size, const int rk_size, int *round_key, int *left_block, int *right_block)
 {
 	des_err error_code = DES_SUCCESS;
 
@@ -109,10 +128,12 @@ des_err mixer(const int block_size, const int rk_size, const int *round_key, int
 	if(rk_size != 48)
 		return DES_RK_LEN_ERR;
 
-	int temp_function;	// TODO: array size needed
+	int temp_function[block_size];
 	int temp_xor;		// TODO: array size needed
 
-	// TODO: function
+	error_code = function(block_size, rk_size, round_key, right_block, temp_function);
+	if(error_code != DES_SUCCESS)
+		return error_code;
 
 	// TODO: xor
 
@@ -127,6 +148,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	{
 		case 64:
 		case 56:
+		case 32:
 			break;
 		default :
 			return DES_BLK_LEN_ERR;
@@ -151,7 +173,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	return DES_SUCCESS;
 }
 
-des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *plain_block, int const (*round_keys)[48], int *cipher_block)
+des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *plain_block, int (*round_keys)[48], int *cipher_block)
 {
 	des_err error_code = DES_SUCCESS;
 
