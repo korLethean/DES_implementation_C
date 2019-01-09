@@ -157,7 +157,7 @@ char B2H(int value);
 
 void hex_string_to_binary_array(char *string, int *binary);
 
-void binary_to_hex_string_array(int *binary, char *string);
+void binary_to_hex_string_array(int *binary, int *string);
 
 
 #endif /* DES_H_ */

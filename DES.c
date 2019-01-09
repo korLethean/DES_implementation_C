@@ -384,6 +384,21 @@ void hex_string_to_binary_array(char *string, int *binary)
 	}
 }
 
+void binary_to_hex_string_array(int *binary, int *string)
+{
+	char temp[5];
+	temp[5] = '\0';
+
+	for(int i = 0 ; i < 16 ; i++)
+	{
+		sprintf(&temp[0], "%d", binary[i * 4]);
+		sprintf(&temp[1], "%d", binary[i * 4 + 1]);
+		sprintf(&temp[2], "%d", binary[i * 4 + 2]);
+		sprintf(&temp[3], "%d", binary[i * 4 + 3]);
+		string[i] = strtol(temp, NULL, 2);
+	}
+}
+
 int main(void)
 {
     const int TEXT_KEY_SIZE = 64;
@@ -391,7 +406,9 @@ int main(void)
     const int RK_SIZE = 48;
     int round_keys[RK_NUM][RK_SIZE];
     int plaintext[TEXT_KEY_SIZE];
+    int plaintext_c[TEXT_KEY_SIZE / 4];
     int ciphertext[TEXT_KEY_SIZE];
+    int ciphertext_c[TEXT_KEY_SIZE / 4];
     int key[TEXT_KEY_SIZE];
     des_err error_code = DES_SUCCESS;
 
@@ -454,13 +471,13 @@ int main(void)
 		return 0;
 	}
 
-
+    binary_to_hex_string_array(ciphertext, ciphertext_c);
 
     /*** for check cipher text ***/
-	/*printf("Cipher text:\t");
-    for(int i = 0 ; i < 64 ; i++)
-		printf("%c", ciphertext[i]);
-	printf("\n");*/
+	printf("Cipher text:\t");
+    for(int i = 0 ; i < 16 ; i++)
+		printf("%X", ciphertext_c[i]);
+	printf("\n");
 	/*****************************/
 
     // TODO: decryption
