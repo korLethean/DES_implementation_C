@@ -13,6 +13,8 @@ typedef uint32_t des_err;
 #define DES_SUCCESS			0x00
 #define DES_BLK_LEN_ERR 	0x01
 #define DES_TABLE_LEN_ERR	0x02
+#define DES_RK_LEN_ERR		0x03
+#define DES_RK_QUANTITY_ERR	0x04
 
 
 /*** In the below permutation tables, values of contents are 1 less than
@@ -145,7 +147,7 @@ des_err mixer(const int round_key, int *left_block, int *right_block);
 
 des_err swapper(int *left_block, int *right_block);
 
-des_err cipher(const int plain_block, int const *round_key[16], int *cipher_block);
+des_err cipher(const int plain_size, const int rk_num, const int rk_size, const int plain_block, int const *round_key[16], int *cipher_block);
 
 des_err key_generator(const int key_size, const int rk_size, int *key_with_parities, int (*round_keys)[48]);
 

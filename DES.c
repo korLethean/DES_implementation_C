@@ -50,6 +50,37 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	return DES_SUCCESS;
 }
 
+des_err cipher(const int plain_size, const int rk_num, const int rk_size, const int plain_block, int const *round_key[16], int *cipher_block)
+{
+	des_err error_code = DES_SUCCESS;
+
+	if(rk_num != 16)
+	{
+		error_code = DES_RK_QUANTITY_ERR;
+		return error_code;
+	}
+
+	if(rk_size != 48)
+	{
+		error_code = DES_RK_LEN_ERR;
+		return error_code;
+	}
+
+	if(plain_size != 64)
+	{
+		error_code = DES_BLK_LEN_ERR;
+		return error_code;
+	}
+
+	int
+
+	permute(plain_size, plain_size, InitialPermutationTableSize, plain_block, NULL, InitialPermutationTable);
+
+
+
+	return error_code;
+}
+
 des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
 {
 	if(!(in_block_length == 64 || in_block_length == 56 || out_block_length == 56 || out_block_length == 48))
@@ -166,6 +197,7 @@ int main(void)
     const int RK_SIZE = 48;
     int round_keys[16][RK_SIZE];
     int plaintext[TEXT_KEY_SIZE];
+    int ciphertext[TEXT_KEY_SIZE];
     int key[TEXT_KEY_SIZE];
     des_err error_code = DES_SUCCESS;
 
@@ -203,6 +235,10 @@ int main(void)
 		printf("\n");
 	}*/
 	/***************************/
+
+    // cipher
+
+    // decryption
 
 
 	return 0;
