@@ -64,7 +64,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 	return DES_SUCCESS;
 }
 
-des_err cipher(const int plain_size, const int rk_num, const int rk_size, const int plain_block, int const *round_key[16], int *cipher_block)
+des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *plain_block, int const *round_key[16], int *cipher_block)
 {
 	des_err error_code = DES_SUCCESS;
 
@@ -91,7 +91,7 @@ des_err cipher(const int plain_size, const int rk_num, const int rk_size, const 
 	int left_block[plain_size / 2];
 	int right_block[plain_size / 2];
 
-	permute(plain_size, plain_size, InitialPermutationTableSize, in_block, out_block, InitialPermutationTable);
+	permute(plain_size, plain_size, InitialPermutationTableSize, plain_block, in_block, InitialPermutationTable);
 
 	split(plain_size, plain_size / 2, in_block, left_block, right_block);
 
