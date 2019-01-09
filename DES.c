@@ -58,14 +58,14 @@ des_err mixer(const int block_size, const int rk_size, const int *round_key, int
 	if(rk_size != 48)
 		return DES_RK_LEN_ERR;
 
-	int temp_function;	// array size needed
-	int temp_xor;		// array size needed
+	int temp_function;	// TODO: array size needed
+	int temp_xor;		// TODO: array size needed
 
-	// function
+	// TODO: function
 
-	// xor
+	// TODO: xor
 
-	// copy
+	// TODO: copy
 
 	return DES_SUCCESS;
 }
@@ -74,6 +74,7 @@ des_err permute(const int in_block_length, const int out_block_length, const int
 {
 	if(!(in_block_length == 64 || in_block_length == 56 || out_block_length == 56 || out_block_length == 48))
 		return DES_BLK_LEN_ERR;
+	// TODO: switch-case recommended
 
 	if(!(table_size == 32 || table_size == 48 || table_size == 64))
 		return DES_TABLE_LEN_ERR;
@@ -121,16 +122,16 @@ des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *p
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
-		// mixer
+		// TODO: mixer
 		if(i != 15)
 		{
-			// swapper
+			// TODO: swapper
 		}
 	}
 
-	// combine left right -> out
+	// TODO: combine left right -> out
 
-	// permute out -> cipher with finalpermute
+	// TODO: permute out -> cipher with finalpermute
 
 
 	return error_code;
@@ -299,7 +300,8 @@ int main(void)
 		printf("DES Encryption Error occurred while cipher: please check round keys size \n");
 		return 0;
 	}
-    // decryption
+
+    // TODO: decryption
 
 
 	return 0;
