@@ -50,8 +50,45 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	return DES_SUCCESS;
 }
 
+des_err function(const int block_size, const int rk_size, const int round_key, int *in_block, int *out_block)
+{
+	des_err error_code = DES_SUCCESS;
+
+	if(block_size != 32)
+	{
+		error_code = DES_BLK_LEN_ERR;
+		return error_code;
+	}
+
+	if(rk_size != 48)
+	{
+		error_code = DES_RK_LEN_ERR;
+		return error_code;
+	}
+
+	const int extended_size = rk_size;
+
+	int temp_extended[extended_size];
+	int temp_xor;			// TODO: array size needed
+	int temp_substitute;	// TODO: array size needed
+
+	error_code = permute(block_size, extended_size, ExpansionPermutationTableSize, in_block, temp_extended, ExpansionPermutationTable);
+	if(error_code != DES_SUCCESS)
+		return error_code;
+
+	// TODO: xor
+
+	// TODO: subsitute
+
+	// TODO: permute(block_size, block_size, StraightPermutationTableSize, temp_substitute, out_block, StraightPermutationTable);
+
+	return error_code;
+}
+
 des_err mixer(const int block_size, const int rk_size, const int *round_key, int *left_block, int *right_block)
 {
+	des_err error_code = DES_SUCCESS;
+
 	if(block_size != 32)
 		return DES_BLK_LEN_ERR;
 
@@ -67,7 +104,7 @@ des_err mixer(const int block_size, const int rk_size, const int *round_key, int
 
 	// TODO: copy
 
-	return DES_SUCCESS;
+	return error_code;
 }
 
 des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
@@ -137,7 +174,10 @@ des_err cipher(const int plain_size, const int rk_num, const int rk_size, int *p
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
-		// TODO: mixer
+		error_code = mixer(plain_size / 2, rk_size, round_keys[i], left_block, right_block);
+		if(error_code != DES_SUCCESS)
+			return error_code;
+
 		if(i != 15)
 		{
 			// TODO: swapper
