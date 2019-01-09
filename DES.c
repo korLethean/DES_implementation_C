@@ -72,9 +72,24 @@ des_err mixer(const int block_size, const int rk_size, const int *round_key, int
 
 des_err permute(const int in_block_length, const int out_block_length, const int table_size, int *in_block, int *out_block, const int *permute_table)
 {
-	if(!(in_block_length == 64 || in_block_length == 56 || out_block_length == 56 || out_block_length == 48))
-		return DES_BLK_LEN_ERR;
-	// TODO: switch-case recommended
+	switch(in_block_length)
+	{
+		case 64:
+		case 56:
+			break;
+		default :
+			return DES_BLK_LEN_ERR;
+	}
+
+	switch(out_block_length)
+	{
+		case 64:
+		case 56:
+		case 48:
+			break;
+		default :
+			return DES_BLK_LEN_ERR;
+	}
 
 	if(!(table_size == 32 || table_size == 48 || table_size == 64))
 		return DES_TABLE_LEN_ERR;
@@ -234,7 +249,6 @@ void hex_string_to_binary_array(char *string, int *binary)
 
 int main(void)
 {
-    printf("Encryption \n\n");
     const int TEXT_KEY_SIZE = 64;
     const int RK_NUM = 16;
     const int RK_SIZE = 48;
@@ -256,6 +270,8 @@ int main(void)
 		printf("%d", key[i]);
 	printf("\n");*/
     /********************************/
+
+    printf("Encryption \n\n");
 
     error_code = key_generator(TEXT_KEY_SIZE, RK_SIZE, key, round_keys);
     if(error_code == DES_BLK_LEN_ERR)
@@ -302,7 +318,6 @@ int main(void)
 	}
 
     // TODO: decryption
-
 
 	return 0;
 }
