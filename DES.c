@@ -50,7 +50,18 @@ des_err split(const int in_block_length, const int out_block_length, int *in_blo
 	return DES_SUCCESS;
 }
 
-des_err function(const int block_size, const int rk_size, const int round_key, int *in_block, int *out_block)
+des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *out_block)
+{
+	if(!(block_length == 48 || block_length == 32))
+		return DES_BLK_LEN_ERR;
+
+	for(int i = 0 ; i < block_length ; i++)
+		out_block[i] = in_block_one[i] ^ in_block_two[i];
+
+	return DES_SUCCESS;
+}
+
+des_err function(const int block_size, const int rk_size, int *round_key, int *in_block, int *out_block)
 {
 	des_err error_code = DES_SUCCESS;
 
@@ -69,14 +80,17 @@ des_err function(const int block_size, const int rk_size, const int round_key, i
 	const int extended_size = rk_size;
 
 	int temp_extended[extended_size];
-	int temp_xor;			// TODO: array size needed
+	int temp_xor[extended_size];
 	int temp_substitute;	// TODO: array size needed
 
 	error_code = permute(block_size, extended_size, ExpansionPermutationTableSize, in_block, temp_extended, ExpansionPermutationTable);
 	if(error_code != DES_SUCCESS)
 		return error_code;
 
-	// TODO: xor
+	error_code = xor(rk_size, temp_extended, round_key, temp_xor);
+	if(error_code != DES_SUCCESS)
+		return error_code;
+
 
 	// TODO: subsitute
 

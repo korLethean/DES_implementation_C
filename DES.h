@@ -139,9 +139,11 @@ des_err combine(const int in_block_length, const int out_block_length, int *left
 
 des_err copy(const int block_length, int *in_block, int *out_block);
 
+des_err xor(const int block_length, int *in_block_one, int *in_block_two, int *out_block);
+
 des_err substitute(const int block_length, int *in_block1, int *in_block2, int *out_block);
 
-des_err function(const int block_size, const int rk_size, const int round_key, int *in_block, int *out_block);
+des_err function(const int block_size, const int rk_size, int *round_key, int *in_block, int *out_block);
 
 des_err mixer(const int block_size, const int rk_size, const int *round_key, int *left_block, int *right_block);
 
