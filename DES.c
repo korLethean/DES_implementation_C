@@ -499,11 +499,10 @@ void hex_string_to_binary_array(char *string, int *binary)
 void binary_to_hex_string_array(int *binary, int *string)
 {
 	char temp[5];
-	temp[5] = '\0';
 
 	for(int i = 0 ; i < 16 ; i++)
 	{
-		sprintf(temp, "%d%d%d%d", binary[i * 4], binary[i * 4 + 1], binary[i * 4 + 2], binary[i * 4 + 3]);
+		sprintf(temp, "%d%d%d%d\0", binary[i * 4], binary[i * 4 + 1], binary[i * 4 + 2], binary[i * 4 + 3]);
 		string[i] = strtol(temp, NULL, 2);
 	}
 }
