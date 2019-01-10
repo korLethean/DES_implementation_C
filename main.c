@@ -20,11 +20,11 @@ int main(void)
     hex_string_to_binary_array("AABB09182736CCDD", key);
 
     /** for check plaintext, key **/
-    /*printf("Plaintext: ");
-    for(int i = 0 ; i < TEXT_KEY_SIZE ; i++)
-    	printf("%d", plaintext[i]);
-    printf("\nKey: ");
-    for(int i = 0 ; i < TEXT_KEY_SIZE ; i++)
+	/*printf("Plainttext: ");
+	for(int i = 0 ; i < TEXT_KEY_SIZE ; i++)
+		printf("%d", plaintext[i]);
+	printf("\nKey: ");
+	for(int i = 0 ; i < TEXT_KEY_SIZE ; i++)
 		printf("%d", key[i]);
 	printf("\n");*/
     /******************************/
@@ -95,7 +95,7 @@ int main(void)
 
     error_code = cipher(TEXT_KEY_SIZE, RK_NUM, RK_SIZE, ciphertext, reversed_round_keys, restoredtext);
     if(error_code == DES_BLK_LEN_ERR)
-	{
+    {
 		printf("DES Decryption Error occurred while cipher: please check key size \n");
 		return 0;
 	}
@@ -121,21 +121,20 @@ int main(void)
 
 	/** for check result **/
 	printf("Plain text:\t");
-    for(int i = 0 ; i < 16 ; i++)
+	for(int i = 0 ; i < 16 ; i++)
 		printf("%X", plaintext_c[i]);
 	printf("\n");
 
-    printf("Cipher text:\t");
-    for(int i = 0 ; i < 16 ; i++)
+	printf("Cipher text:\t");
+	for(int i = 0 ; i < 16 ; i++)
 		printf("%X", ciphertext_c[i]);
 	printf("\n");
 
-    printf("Restored text:\t");
-    for(int i = 0 ; i < 16 ; i++)
+	printf("Restored text:\t");
+	for(int i = 0 ; i < 16 ; i++)
 		printf("%X", restoredtext_c[i]);
 	printf("\n");
 	/***************************/
 
 	return 0;
 }
-

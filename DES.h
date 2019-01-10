@@ -92,8 +92,6 @@ des_err shift_left(const int num_of_shifts, const int block_size, int *block);
 
 int H2B(char value);
 
-char B2H(int value);
-
 void hex_string_to_binary_array(char *string, int *binary);
 
 void binary_to_hex_string_array(int *binary, int *string);
